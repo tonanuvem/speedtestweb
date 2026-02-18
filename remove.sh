@@ -14,6 +14,10 @@ docker compose down --remove-orphans
 
 echo "✅ $APP_NAME removido com sucesso!"
 
-echo "ℹ️ Imagens NÃO foram apagadas."
-echo "   Para remover a imagem manualmente:"
-echo "   docker image rm tonanuvem/speedtestweb:latest"
+echo "ℹ️ Imagens serão apagadas."
+echo "    removendo a imagem :"
+docker image rm tonanuvem/speedtestweb:loading
+
+echo ""
+
+echo "✅ Tudo removido com sucesso!"
