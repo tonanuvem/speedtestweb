@@ -3,65 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <title>FIAP - Performance</title>
+
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+
     <style>
-        /* Quebra palavras longas na tabela para não estourar */
         table td, table th {
             word-break: break-word;
-            max-width: 300px; /* ajuste se quiser mais largo */
+            max-width: 300px;
+        }
+
+        #loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .loading-box {
+            text-align: center;
+        }
+
+        .loading-text {
+            margin-top: 15px;
+            font-size: 1.2rem;
+            font-weight: 500;
         }
     </style>
 </head>
+
 <body>
-<nav class="teal lighten-2 z-depth-1">
-    <div class="nav-wrapper container">
-        <a href="#" class="brand-logo center">
-            <i class="material-icons left">cloud</i>FIAP - Speed Test
-        </a>
-    </div>
-</nav>
 
-<main class="container" style="margin-top: 20px;">
-    <div class="row">
-        <div class="col s12 m10 offset-m1 l8 offset-l2">
-            <div class="card z-depth-3">
-                
-                <!-- Detalhes das Variáveis -->
-                <div class="card-content">
-                    <span class="card-title">
-                        <i class="material-icons teal-text text-lighten-1">settings</i>
-                        Teste de Performance de Conectividade
-                    </span>
-                    <p>Esse serviço utiliza o site : https://www.speedtest.net/ </p>
-                    <div class="divider" style="margin: 15px 0;"></div>
-
-                    <table class="highlight responsive-table">
-                        <thead>
-                            <tr>
-                                <th>Download</th>
-                                <th>Upload</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>{{ download }}</td>
-                                <td>{{ upload }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
+<!-- LOADING -->
+<div id="loading-overlay">
+    <div class="loading-box">
+        <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-teal-only">
+                <div class="circle-clipper left"><div class="circle"></div></div>
+                <div class="gap-patch"><div class="circle"></div></div>
+                <div class="circle-clipper right"><div class="circle"></div></div>
             </div>
         </div>
+        <div class="loading-text teal-text">
+            Verificando a velocidade...
+        </div>
     </div>
-</main>
+</div>
+
+<!-- CONTEÚDO -->
+<div id="page-content" style="display:none;">
+
+    <nav class="teal lighten-2 z-depth-1">
+        <div class="nav-wrapper container">
+            <a href="#" class="brand-logo center">
+                <i class="material-icons left">cloud</i>FIAP - Speed Test
+            </a>
+        </div>
+    </nav>
+
+    <main class="container" style="margin-top: 20px;">
+        <div class="row">
+            <div class="col s12 m10 offset-m1 l8 offset-l2">
+                <div class="card z-depth-3">
+                    <div class="card-content">
+                        <span class="card-title">
+                            <i class="material-icons teal-text text-lighten-1">settings</i>
+                            Teste de Performance de Conectividade
+                        </span>
+
+                        <p>Esse serviço utiliza o site : https://www.speedtest.net/</p>
+
+                        <div class="divider" style="margin: 15px 0;"></div>
+
+                        <table class="highlight responsive-table">
+                            <thead>
+                                <tr>
+                                    <th>Download</th>
+                                    <th>Upload</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td id="download">--</td>
+                                    <td id="upload">--</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        M.updateTextFields();
-    });
+document.addEventListener("DOMContentLoaded", () => {
+
+    fetch("/run-test")
+        .then(res => res.json())
+        .then(data => {
+            if (data.error) {
+                alert("Erro ao executar o speed test");
+                return;
+            }
+
+            document.getElementById("download").innerText = data.download;
+            document.getElementById("upload").innerText = data.upload;
+
+            document.getElementById("loading-overlay").style.display = "none";
+            document.getElementById("page-content").style.display = "block";
+        })
+        .catch(() => {
+            alert("Falha ao conectar ao servidor");
+        });
+});
 </script>
 
 </body>
