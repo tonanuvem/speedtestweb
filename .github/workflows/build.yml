@@ -2,7 +2,7 @@ name: Build & Push Multi-Arch Image
 
 on:
   push:
-    branches: ["main"]
+    branches: ["loading"]
 
 jobs:
   build:
