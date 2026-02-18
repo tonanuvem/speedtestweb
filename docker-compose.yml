@@ -1,0 +1,7 @@
+services:
+  speedtestweb:
+    image: tonanuvem/speedtestweb:latest
+    container_name: speedtestweb
+    ports:
+      - "5000:5000"
+    restart: unless-stopped
