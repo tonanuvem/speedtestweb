@@ -17,4 +17,4 @@ echo "🐳 Iniciando containers..."
 docker compose up -d
 
 echo "✅ $APP_NAME está rodando!"
-echo "🌐 Acesse em: http://localhost:5000"
+echo "🌐 Acesse em: http://localhost:80"
